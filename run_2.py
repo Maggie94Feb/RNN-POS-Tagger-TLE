@@ -8,7 +8,7 @@ from keras.utils import np_utils
 import pickle
 import os
 import numpy as np
-# 预处理conllu语料
+# preprocess learner corpus
 meta_list, data_list = data_loader.load_data(load_train=True, load_dev=True, load_test=True)
 train_meta, train_meta_corrected, \
 dev_meta, dev_meta_corrected, \
@@ -18,7 +18,7 @@ train_data, train_data_corrected, \
 dev_data, dev_data_corrected, \
 test_data, test_data_corrected = data_list
 
-# 处理corrected和incorrect分类数据
+# process corrected and incorrect data
 X_train = [[d["form"].tolist(), d["upostag"].tolist()] for d in train_data]
 X_train_correct = [[d["form"].tolist(), d["upostag"].tolist()] for d in train_data_corrected]
 X_train.extend(X_train_correct)
@@ -31,7 +31,7 @@ X_test = [[d["form"].tolist(), d["upostag"].tolist()] for d in test_data]
 X_test_correct = [[d["form"].tolist(), d["upostag"].tolist()] for d in test_data_corrected]
 X_test.extend(X_test_correct)
 
-# 构建worddict和tagdict
+# generate worddict和tagdict
 word_to_ix = dict()
 tag_to_ix = dict()
 for i in range(len(X_train)):
@@ -48,7 +48,7 @@ if "_" not in word_to_ix:
 if "_" not in tag_to_ix:
     tag_to_ix["_"] = len(tag_to_ix.keys())
     
-MAXLEN=30 # 需要和模型一致
+MAXLEN=30
 train_X,train_y = [],[]
 dev_X,dev_y = [],[]
 test_X,test_y = [],[]
@@ -73,11 +73,11 @@ test_y = pad_sequences(test_y, maxlen=MAXLEN, padding='post', truncating='post',
 
 #trainLSTM        = nn(train_X, train_y, correct_labels, dev_X, dev_y, correct_labels_dev, word_to_ix).trainingModel()  # 最优算法
 trainLSTM_simple = nn_simple(train_X, train_y, correct_labels, dev_X, dev_y, correct_labels_dev, word_to_ix).trainingModel()  # 对比算法
-path = r'.' # windows 下需要改为代码当前路径
+path = r'.' # need to change the file path in windows
 with open(os.path.join(path, '/trainHistoryDict'), 'wb') as file_pi:
         pickle.dump(trainLSTM.history, file_pi)
 
-# 输出precision recall f1score
+# generate precision recall f1score
 def metrics_report(X,y):
     test_Y = np_utils.to_categorical(y, len(tag_to_ix)+1)
     modelpath = r'PDmodel_epoch_10_batchsize_32_embeddingDim_100_new2.h5'

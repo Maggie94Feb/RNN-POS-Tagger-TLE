@@ -30,7 +30,7 @@ class revivification:
             self.corpus.append(sentence)
         return self.corpus
 
-
+### Orginal code from github
 class nn_simple:
     def __init__(self, dataset, labels, correct_labels, dev_dataset, dev_labels, correct_labels_dev, wordvocab):
         self.dataset = np.array(dataset)
@@ -85,6 +85,7 @@ class nn_simple:
         return "save done."
 
 
+### Code changes
 class nn:
     def __init__(self, dataset, labels, correct_labels, dev_dataset, dev_labels, correct_labels_dev, wordvocab):
         self.dataset = np.array(dataset)
